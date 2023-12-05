@@ -216,7 +216,6 @@ function check_patch_for_retest_request() {
     local patch_id=$(echo "$patch_json" | jq -rc '.id')
     if [ "Xnull" != "X$patch_comments_url" ]; then
         local comments_json=$(curl -s "$userpw" "$patch_comments_url")
-
         local seq_end=$(echo "$comments_json" | jq -rc 'length')
         if [ "$seq_end" -a $seq_end -gt 0 ]; then
             seq_end=$((seq_end-1))
@@ -235,7 +234,7 @@ function check_series_needs_retest() {
     local pw_instance="$1"
     local pw_project="$2"
 
-    local patches_list=$(curl -s "$userpw" "http://${pw_instance}/api/patches/?project=${pw_project}&state=new&state=rfc&state=under-review")
+    local patches_list=$(curl -s "$userpw" "http://${pw_instance}/api/patches/?project=${pw_project}&state=new&state=rfc&state=under-review&archived=false&order=-id")
     local n=$(echo "$patches_list" | jq -rc 'length')
 
     if [ "Xnull" == "X$n" -o "X" == "X$n" ]; then
