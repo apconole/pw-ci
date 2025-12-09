@@ -96,6 +96,10 @@ get_unsynced_series "$pw_instance" "$ci_instance" | \
 
         if [ "$result" == "in-progress" ]; then
             echo "CIRRUS patch_id=$patch_id belonging to series=$series_id is not completed[$status]. Skipping" 1>&2
+            if [ "$status" == "null" ]; then
+                set_synced_patch "$patch_id" "$patchwork_instance" "$ci_instance"
+                echo "CIRRUS patch_id=$patch_id is cleared (null status)" 1>&2
+            fi
             continue
         fi
 
